@@ -1,0 +1,70 @@
+<!DOCTYPE HTML>
+<style type="text/css">
+.toolbar{
+width: 16%;
+float: left;
+}
+.toolbar img{
+width:45%;
+}
+.editor{
+	display: inline-block;
+	width: 61%;
+	background: #CCC;
+	height: 175px;
+}
+.editor img{
+	width:7%;
+}
+</style>
+
+<div class="toolbar">
+<img id="drag1" draggable="true" ondragstart="drag(event)" src="https://editor-statics.s3.ap-south-1.amazonaws.com/Image1.png" />
+<img id="drag2" draggable="true" ondragstart="drag(event)" src="https://editor-statics.s3.ap-south-1.amazonaws.com/Image2.png" />
+<button>Container</button>
+<button>Add Text</button>
+</div>
+<script id="js" class="editor" contenteditable ondrop="drop(event)" ondragover="allowDrop(event)">
+Editable
+</script>
+
+<script>
+(function() {
+
+  var timer,
+      js = document.getElementById('js'),
+      delay = 2000;
+
+  js.onkeyup = function(event) {
+
+    if (typeof timer != "undefined") {
+
+      clearTimeout(timer);
+      timer = 0;
+    }
+
+    timer = setTimeout(executeCode, delay);
+  };
+
+ function executeCode() {
+    var script = document.createElement("script");
+    script.innerHTML = js.innerHTML;
+    js.parentNode.insertBefore(script, js);
+ }
+
+})();
+
+function allowDrop(ev) {
+  ev.preventDefault();
+}
+
+function drag(ev) {
+  ev.dataTransfer.setData("text", ev.target.id);
+}
+
+function drop(ev) {
+  ev.preventDefault();
+  var data = ev.dataTransfer.getData("text");
+  ev.target.appendChild(document.getElementById(data));
+}
+</script>
